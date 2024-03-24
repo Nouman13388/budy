@@ -1,4 +1,4 @@
-import 'package:budy/view/screens/home_screen.dart';
+import 'package:budy/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
