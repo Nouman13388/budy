@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "523373871783",
+    "project_id": "budyapp-a1a1f",
+    "storage_bucket": "budyapp-a1a1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523373871783:android:11b2f3f314f34c49411182",
+        "android_client_info": {
+          "package_name": "com.example.budy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSpOlnbublbYmHI_SmwL_dIcRZJZE_HqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

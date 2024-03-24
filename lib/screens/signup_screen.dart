@@ -1,20 +1,27 @@
+import 'package:budy/screens/signin_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   bool _passwordsMatch = true;
+  bool _isLoading = false; // Track loading state
 
   @override
   void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -34,21 +41,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset(
-                  'assets/images/logo.png', // Replace with your logo image path
-                  height: 150,
-                ),
                 const SizedBox(height: 20),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _fullNameController,
+                  decoration: const InputDecoration(
                     labelText: 'Full Name',
                     prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email),
                     border: OutlineInputBorder(),
@@ -84,8 +89,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _passwordsMatch ? _signUp : null,
-                  child: const Text('Sign Up'),
+                  onPressed: _isLoading ? null : _signUp,
+                  child: _isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text('Sign Up'),
                 ),
                 const SizedBox(height: 10),
                 TextButton(
@@ -103,7 +110,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _signUp() {
-    // Implement sign-up logic here
+  void _signUp() async {
+    try {
+      // Check if passwords match
+      if (!_passwordsMatch) {
+        return;
+      }
+
+      // Set loading state to true
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Create user with email and password
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      // Clear text controllers
+      _fullNameController.clear();
+      _emailController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+
+      // Navigate to the sign-in screen after successful sign-up
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SignInScreen(),
+        ),
+      );
+    } catch (error) {
+      // Handle sign-up errors
+      print("Error signing up: $error");
+      // Show error message to the user if needed
+
+      // Set loading state to false
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }

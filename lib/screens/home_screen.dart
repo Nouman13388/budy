@@ -3,12 +3,14 @@ import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
 import 'package:budy/screens/profile_screen.dart';
 import 'package:budy/screens/saved_screen.dart';
+import 'package:budy/screens/signin_screen.dart';
 import 'package:budy/services/location_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -71,11 +73,24 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: IconButton(
+                child: PopupMenuButton(
                   icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    // Handle menu icon tap
-                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.logout),
+                        title: Text('Logout'),
+                        onTap: _logout,
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text('Settings'),
+                        onTap: _openSettings,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -176,5 +191,26 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  void _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Navigate to sign-in screen and remove all previous routes from the stack
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SignInScreen(),
+        ),
+        (route) => false, // Prevents going back to the previous route
+      );
+    } catch (e) {
+      print('Error logging out: $e');
+      // Show error message to the user if needed
+    }
+  }
+
+  void _openSettings() {
+    // Implement settings functionality
   }
 }

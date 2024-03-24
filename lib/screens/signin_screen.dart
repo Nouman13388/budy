@@ -1,9 +1,19 @@
 import 'package:budy/screens/home_screen.dart';
 import 'package:budy/screens/signup_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignInScreenState createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false; // Track loading state
 
   @override
   Widget build(BuildContext context) {
@@ -19,44 +29,37 @@ class SignInScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset(
-                  'assets/images/logo.png', // Replace with your logo image path
-                  height: 150,
-                ),
                 const SizedBox(height: 20),
-                const TextField(
+                TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.email),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const TextField(
+                TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    // Implement sign-in logic here
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('Sign In'),
+                  onPressed: _isLoading
+                      ? null
+                      : _signIn, // Disable button when loading
+                  child: _isLoading
+                      ? const CircularProgressIndicator() // Show progress indicator
+                      : const Text('Sign In'),
                 ),
                 const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
-                    // Navigate to the sign-up screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -72,5 +75,36 @@ class SignInScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _signIn() async {
+    // Set loading state to true
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Sign in with email and password
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      // Navigate to the home screen after successful sign-in
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } catch (error) {
+      // Handle sign-in errors
+      print("Error signing in: $error");
+      // Show error message to the user if needed
+    } finally {
+      // Set loading state to false when sign-in process is complete
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }
