@@ -1,12 +1,14 @@
+import 'package:budy/screens/budy_screen.dart';
 import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:budy/screens/profile_screen.dart';
+import 'package:budy/screens/saved_screen.dart';
 import 'package:budy/services/location_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -35,7 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
-      print('Error getting location: $e');
+      if (kDebugMode) {
+        print('Error getting location: $e');
+      }
       setState(() {
         currentLocation = 'Unknown Location';
       });
@@ -53,8 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const ExploreScreen(),
     const EventScreen(),
-    const Text('Budy'),
-    const Text('Saved'),
+    const BudyScreen(),
+    const SavedScreen(),
     const ProfileScreen(),
   ];
 
@@ -139,24 +143,29 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.location_searching),
             label: 'Explore',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.event),
             label: 'Event',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Budy',
+            icon: SizedBox(
+              height: 50, // Adjust height as needed
+              child: Image.asset(
+                'assets/images/budy_logo.png', // Replace 'assets/your_image.png' with your image path
+              ),
+            ),
+            label: '',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.save),
             label: 'Saved',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
