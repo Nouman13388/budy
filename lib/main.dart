@@ -1,4 +1,4 @@
-import 'package:budy/screens/home_screen.dart';
+import 'package:budy/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -8,6 +8,6 @@ void main() {
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
-    home: const HomeScreen(),
+    home: const SignInScreen(),
   ));
 }

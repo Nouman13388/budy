@@ -19,8 +19,7 @@ class _BudyScreenState extends State<BudyScreen> {
         PageViewModel(
           title: "Welcome to Budy",
           body: "Connect with your buddies and explore events together!",
-          image: Image.asset(
-              'assets/images/intro1.png'), // Replace with your image path
+          image: Image.asset('assets/images/'), // Replace with your image path
           decoration: const PageDecoration(
             pageColor: Colors.white,
             bodyTextStyle: TextStyle(fontSize: 18),
