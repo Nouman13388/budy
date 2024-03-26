@@ -76,23 +76,24 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Expanded(
+              flex: 0,
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.topLeft,
                 child: PopupMenuButton(
                   icon: const Icon(Icons.menu),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: ListTile(
-                        leading: const Icon(Icons.logout),
-                        title: const Text('Logout'),
-                        onTap: _logout,
+                        leading: const Icon(Icons.settings),
+                        title: const Text('Settings'),
+                        onTap: _openSettings,
                       ),
                     ),
                     PopupMenuItem(
                       child: ListTile(
-                        leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
-                        onTap: _openSettings,
+                        leading: const Icon(Icons.logout),
+                        title: const Text('Logout'),
+                        onTap: _logout,
                       ),
                     ),
                   ],
