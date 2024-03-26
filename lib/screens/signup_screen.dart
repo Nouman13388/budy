@@ -1,9 +1,10 @@
 import 'package:budy/screens/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -142,11 +143,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
           builder: (context) => const SignInScreen(),
         ),
       );
-    } catch (error) {
+    } on FirebaseAuthException catch (error) {
       // Handle sign-up errors
-      print("Error signing up: $error");
-      // Show error message to the user if needed
+      String errorMessage = '';
 
+      if (error.code == 'email-already-in-use') {
+        errorMessage =
+            'This email is already in use. Please use a different email.';
+      } else if (error.code == 'weak-password') {
+        errorMessage =
+            'The password provided is too weak. Please choose a stronger password.';
+      } else if (error.code == 'network-request-failed') {
+        errorMessage = 'No internet connection. Please try again later.';
+      } else {
+        errorMessage = 'An error occurred. Please try again later.';
+      }
+
+      // Show error message to the user using a Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+        ),
+      );
+
+      if (kDebugMode) {
+        print("Error signing up: $error");
+      }
+    } catch (error) {
+      // Handle other errors
+      String errorMessage = 'An error occurred. Please try again later.';
+
+      // Show error message to the user using a Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+        ),
+      );
+
+      if (kDebugMode) {
+        print("Error signing up: $error");
+      }
+    } finally {
       // Set loading state to false
       setState(() {
         _isLoading = false;

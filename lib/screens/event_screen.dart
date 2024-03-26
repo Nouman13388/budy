@@ -95,7 +95,7 @@ class EventCard extends StatelessWidget {
                 topRight: Radius.circular(8),
               ),
               child: Image.asset(
-                eventImagePath,
+                'assets/images/event_img.png', // Replace with actual image path
                 height: 200,
                 fit: BoxFit.cover,
               ),
@@ -105,17 +105,17 @@ class EventCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    eventName,
-                    style: const TextStyle(
+                  const Text(
+                    'eventName',
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    eventLocation,
-                    style: const TextStyle(
+                  const Text(
+                    'eventLocation',
+                    style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),

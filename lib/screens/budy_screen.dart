@@ -19,7 +19,8 @@ class _BudyScreenState extends State<BudyScreen> {
         PageViewModel(
           title: "Welcome to Budy",
           body: "Connect with your buddies and explore events together!",
-          image: Image.asset('assets/images/'), // Replace with your image path
+          image: Image.asset(
+              'assets/images/budy_logo.png'), // Replace with your image path
           decoration: const PageDecoration(
             pageColor: Colors.white,
             bodyTextStyle: TextStyle(fontSize: 18),
@@ -29,7 +30,7 @@ class _BudyScreenState extends State<BudyScreen> {
           title: "Discover Events",
           body: "Find exciting events happening near you.",
           image: Image.asset(
-              'assets/images/intro2.png'), // Replace with your image path
+              'assets/images/budy_logo.png'), // Replace with your image path
           decoration: const PageDecoration(
             pageColor: Colors.white,
             bodyTextStyle: TextStyle(fontSize: 18),
@@ -39,7 +40,7 @@ class _BudyScreenState extends State<BudyScreen> {
           title: "Save Favorites",
           body: "Save your favorite events for easy access.",
           image: Image.asset(
-              'assets/images/intro3.png'), // Replace with your image path
+              'assets/images/budy_logo.png'), // Replace with your image path
           decoration: const PageDecoration(
             pageColor: Colors.white,
             bodyTextStyle: TextStyle(fontSize: 18),

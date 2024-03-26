@@ -44,6 +44,15 @@ dependencies:
   introduction_screen: ^3.1.14
   firebase_core: ^2.27.1
   firebase_auth: ^4.17.9
+  google_sign_in: ^6.2.1
+  flutter_signin_button: ^2.0.0
+  adaptive_theme: ^3.6.0-nullsafety.0
+  dynamic_theme_nullsafe: ^1.0.5
+  dynamic_themes: ^1.1.0
+  shared_preferences: ^2.2.2
+  get: ^4.6.6
+  shimmer: ^3.0.0
+  firebase_messaging: ^14.7.20
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
 import 'package:budy/screens/profile_screen.dart';
 import 'package:budy/screens/saved_screen.dart';
+import 'package:budy/screens/setting_screen.dart';
 import 'package:budy/screens/signin_screen.dart';
 import 'package:budy/services/location_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,14 +11,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late String currentLocation = 'Loading...';
+  String currentLocation = 'Loading...';
+  double? currentLatitude;
+  double? currentLongitude;
   bool _showSearchBar = false;
 
   @override
@@ -28,10 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _getLocation() async {
     try {
-      String? location = await LocationService.getLocationName();
-      if (location != null) {
+      final locationData = await LocationService.getLocation();
+      if (locationData != null) {
         setState(() {
-          currentLocation = location;
+          currentLatitude = locationData['latitude'];
+          currentLongitude = locationData['longitude'];
+          currentLocation = 'Lat: $currentLatitude, Lng: $currentLongitude';
         });
       } else {
         setState(() {
@@ -56,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  static final List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _widgetOptions = <Widget>[
     const ExploreScreen(),
     const EventScreen(),
     const BudyScreen(),
@@ -78,15 +83,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.logout),
-                        title: Text('Logout'),
+                        leading: const Icon(Icons.logout),
+                        title: const Text('Logout'),
                         onTap: _logout,
                       ),
                     ),
                     PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Settings'),
+                        leading: const Icon(Icons.settings),
+                        title: const Text('Settings'),
                         onTap: _openSettings,
                       ),
                     ),
@@ -102,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: const TextStyle(fontSize: 16),
                   overflow: TextOverflow.ellipsis,
                 ),
-                const Icon(Icons.location_on),
+                const SizedBox(width: 10),
+                const Icon(Icons.location_on, size: 20),
               ],
             ),
             Expanded(
@@ -205,12 +211,19 @@ class _HomeScreenState extends State<HomeScreen> {
         (route) => false, // Prevents going back to the previous route
       );
     } catch (e) {
-      print('Error logging out: $e');
+      if (kDebugMode) {
+        print('Error logging out: $e');
+      }
       // Show error message to the user if needed
     }
   }
 
   void _openSettings() {
-    // Implement settings functionality
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SettingsScreen(),
+      ),
+    );
   }
 }
