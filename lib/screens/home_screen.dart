@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   currentLocation,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 11),
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(width: 10),
