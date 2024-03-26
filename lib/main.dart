@@ -1,5 +1,4 @@
 import 'package:budy/firebase_options.dart';
-import 'package:budy/screens/forgot_screen/forgot_screen.dart';
 import 'package:budy/screens/splash_screen.dart';
 import 'package:budy/utils/route_helper.dart';
 import 'package:flutter/material.dart';
@@ -19,17 +18,15 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Convert GetPage list to a Map
-    final Map<String, Widget Function(BuildContext)> routesMap =
-        Map.fromIterable(
-      RouteHelper.routes,
-      key: (page) => (page as GetPage).name,
-      value: (page) => (BuildContext context) => (page as GetPage).page(),
-    );
+    final Map<String, Widget Function(BuildContext)> routesMap = {
+      for (var page in RouteHelper.routes)
+        (page).name: (BuildContext context) => (page).page()
+    };
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

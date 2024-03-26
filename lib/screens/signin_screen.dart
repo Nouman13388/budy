@@ -1,4 +1,4 @@
-import 'package:budy/screens/forgot_screen/forgot_screen.dart';
+import 'package:budy/screens/forgot_screen.dart';
 import 'package:budy/screens/home_screen.dart';
 import 'package:budy/screens/signup_screen.dart';
 import 'package:budy/utils/route_helper.dart';
@@ -43,6 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -51,85 +52,109 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/images/budy_logo.png', // Path to your image asset
+                width: 150, // Adjust the width as needed
+                height: 150, // Adjust the height as needed
+              ),
+              const SizedBox(height: 20), // Add some spacing
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Checkbox(
-                      value: _rememberMe,
-                      onChanged: (value) {
-                        setState(() {
-                          _rememberMe = value!;
-                        });
-                      },
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                    Text('Remember Me'),
-                    Expanded(child: Container()), // Spacer
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              _rememberMe = value!;
+                            });
+                          },
+                        ),
+                        const Text('Remember Me'),
+                        Expanded(child: Container()), // Spacer
+                        TextButton(
+                          onPressed: () {
+                            // Navigate to the forgot password screen using named route
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ForgotScreen()),
+                            );
+                          },
+                          child: const Text('Forgot Password?'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () async => await _signInWithEmailAndPassword(),
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text('Sign In'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () async => await _signInWithGoogle(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/google.png', // Path to your image asset
+                            width: 24, // Adjust the width as needed
+                            height: 24, // Adjust the height as needed
+                          ),
+                          const SizedBox(
+                              width:
+                                  10), // Add some spacing between icon and text
+                          const Text('Sign In with Google'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     TextButton(
                       onPressed: () {
-                        // Navigate to the forgot password screen using named route
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ForgotScreen()),
+                            builder: (context) => const SignUpScreen(),
+                          ),
                         );
                       },
-                      child: const Text('Forgot Password?'),
+                      child: const Text('Don\'t have an account? Sign Up'),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () async => await _signInWithEmailAndPassword(),
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Sign In'),
-                ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('Don\'t have an account? Sign Up'),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed:
-                      _isLoading ? null : () async => await _signInWithGoogle(),
-                  child: const Text('Sign In with Google'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -144,7 +169,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
     // Sign in with email and password
     try {
-      await Future.delayed(Duration(seconds: 2)); // Simulate network delay
+      await Future.delayed(
+          const Duration(seconds: 2)); // Simulate network delay
 
       // Your sign-in logic goes here
 
@@ -166,7 +192,9 @@ class _SignInScreenState extends State<SignInScreen> {
       );
     } catch (error) {
       // Handle sign-in errors
-      print("Error signing in: $error");
+      if (kDebugMode) {
+        print("Error signing in: $error");
+      }
     } finally {
       // Set loading state to false when sign-in process is complete
       setState(() {

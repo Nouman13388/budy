@@ -1,10 +1,7 @@
 import 'package:budy/screens/budy_screen.dart';
 import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
-import 'package:budy/screens/forgot_screen/congratulation_screen.dart';
-import 'package:budy/screens/forgot_screen/forgot_screen.dart';
-import 'package:budy/screens/forgot_screen/set_password_screen.dart';
-import 'package:budy/screens/forgot_screen/verification_screen.dart';
+import 'package:budy/screens/forgot_screen.dart';
 import 'package:budy/screens/home_screen.dart';
 import 'package:budy/screens/onboarding_screen.dart';
 import 'package:budy/screens/profile_screen.dart';
@@ -56,9 +53,6 @@ class RouteHelper {
     GetPage(name: signin, page: () => const SignInScreen()),
     GetPage(name: signup, page: () => const SignUpScreen()),
     GetPage(name: forgot, page: () => const ForgotScreen()),
-    GetPage(name: verification, page: () => const VerificationScreen()),
-    GetPage(name: setpassword, page: () => const SetPasswordScreen()),
-    GetPage(name: congratulation, page: () => const CongratulationScreen()),
     GetPage(name: home, page: () => const HomeScreen()),
     GetPage(name: explore, page: () => const ExploreScreen()),
     GetPage(name: event, page: () => const EventScreen()),

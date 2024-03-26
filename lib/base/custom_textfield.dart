@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, must_be_immutable
+
 import 'package:budy/utils/mycolors.dart';
 import 'package:flutter/material.dart';
 class custom_textfield extends StatelessWidget {
@@ -19,7 +21,7 @@ class custom_textfield extends StatelessWidget {
 
       height: 50,
 
-      padding: EdgeInsets.only(left: 10),
+      padding: const EdgeInsets.only(left: 10),
 
       decoration: BoxDecoration(
         border: Border.all(color: Mycolor.border_color,width: 2,),

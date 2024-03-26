@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:budy/screens/signin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -42,6 +44,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Image.asset(
+                  'assets/images/budy_logo.png', // Path to your image asset
+                  width: 150, // Adjust the width as needed
+                  height: 150, // Adjust the height as needed
+                ),
+                const SizedBox(height: 20),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _fullNameController,
@@ -88,14 +96,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         !_passwordsMatch ? 'Passwords do not match' : null,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _signUp,
                   child: _isLoading
                       ? const CircularProgressIndicator()
                       : const Text('Sign Up'),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
                     // Navigate back to the sign-in screen

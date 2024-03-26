@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, camel_case_types
+
 import 'package:budy/utils/mycolors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,12 +17,12 @@ class custom_button extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
       children: [
-        SizedBox(),
+        const SizedBox(),
         Text(title),
         Visibility(
           visible:visivility,
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: Mycolor.primary_white,
               shape: BoxShape.circle,

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, camel_case_types
+
 import 'package:budy/utils/mycolors.dart';
 import 'package:flutter/material.dart';
 class custom_appbar extends StatelessWidget implements PreferredSizeWidget {
@@ -29,9 +31,9 @@ class custom_appbar extends StatelessWidget implements PreferredSizeWidget {
          child: trailingicon),
       ],
       foregroundColor: Colors.black,
-      leading:val=="1"?SizedBox():InkWell(
+      leading:val=="1"?const SizedBox():InkWell(
         onTap: voidCallback,
-        child: Icon(Icons.arrow_back,color: Colors.black,),
+        child: const Icon(Icons.arrow_back,color: Colors.black,),
       ),
       backgroundColor: Mycolor.primary_white,
     );
