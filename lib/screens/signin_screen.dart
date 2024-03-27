@@ -1,13 +1,10 @@
 import 'package:budy/screens/forgot_screen.dart';
 import 'package:budy/screens/home_screen.dart';
 import 'package:budy/screens/signup_screen.dart';
-import 'package:budy/utils/route_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -20,9 +17,9 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
-  bool _rememberMe = false;
-  late SharedPreferences _prefs;
+  bool _isLoading = false; // Track loading state
+  bool _rememberMe = false; // Track remember me checkbox state
+  late SharedPreferences _prefs; // Shared preferences instance
 
   @override
   void initState() {
@@ -30,8 +27,10 @@ class _SignInScreenState extends State<SignInScreen> {
     _initSharedPreferences();
   }
 
+  // Initialize shared preferences instance
   void _initSharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
+    // Load remember me preference and set email and password if available
     setState(() {
       _rememberMe = _prefs.getBool('rememberMe') ?? false;
       if (_rememberMe) {
@@ -98,8 +97,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ForgotScreen(),
-                                ),
+                                    builder: (context) => const ForgotScreen()),
                               );
                             },
                             child: const Text('Forgot Password?'),
@@ -116,16 +114,22 @@ class _SignInScreenState extends State<SignInScreen> {
                             : const Text('Sign In'),
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton.icon(
+                      ElevatedButton(
                         onPressed: _isLoading
                             ? null
                             : () async => await _signInWithGoogle(),
-                        icon: const Image(
-                          image: AssetImage('assets/images/google.png'),
-                          width: 24,
-                          height: 24,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image(
+                              image: AssetImage('assets/images/google.png'),
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(width: 10),
+                            const Text('Sign In with Google'),
+                          ],
                         ),
-                        label: const Text('Sign In with Google'),
                       ),
                       const SizedBox(height: 10),
                       TextButton(
@@ -156,7 +160,11 @@ class _SignInScreenState extends State<SignInScreen> {
     });
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      // Sign in with email and password
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
       if (_rememberMe) {
         _prefs.setBool('rememberMe', true);
@@ -176,6 +184,14 @@ class _SignInScreenState extends State<SignInScreen> {
       if (kDebugMode) {
         print("Error signing in: $error");
       }
+
+      String errorMessage = 'An error occurred. Please try again later.';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+        ),
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -184,15 +200,17 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
+    setState(() {
+      _isLoading = true;
+    });
 
+    try {
+      // Initialize Google Sign-In
       final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId:
             '892033678928-v76a4et8ia60sl1dvh141jbe7428rbr0.apps.googleusercontent.com',
       );
+
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
 
@@ -204,14 +222,17 @@ class _SignInScreenState extends State<SignInScreen> {
           idToken: googleAuth.idToken,
         );
 
+        // Sign in to Firebase with the Google credential
         await FirebaseAuth.instance.signInWithCredential(credential);
 
+        // Navigate to the home screen after successful sign-in
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       }
     } catch (error) {
+      // Handle Google sign-in errors
       String errorMessage = 'An error occurred. Please try again later.';
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -223,7 +244,8 @@ class _SignInScreenState extends State<SignInScreen> {
       if (kDebugMode) {
         print("Error signing in with Google: $error");
       }
-
+    } finally {
+      // Set loading state to false
       setState(() {
         _isLoading = false;
       });
