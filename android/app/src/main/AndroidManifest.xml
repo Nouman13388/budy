@@ -11,6 +11,11 @@
         android:label="budy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+
+        <!-- TODO: Add your Google Maps API key here -->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB0v6p7f6FeafE4jauFyw9GKsSnq1AW_xk"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

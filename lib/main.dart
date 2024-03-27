@@ -10,7 +10,7 @@ void main() async {
 
   // Initialize Firebase
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.web,
   );
 
   // Run the app with a splash screen delay

@@ -1,8 +1,40 @@
+//Event Screen
+import 'package:budy/screens/event_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http; // Import HTTP package
+import 'dart:convert'; // Import convert for JSON decoding
 
-class EventScreen extends StatelessWidget {
-  const EventScreen({super.key});
+class EventScreen extends StatefulWidget {
+  const EventScreen({Key? key}) : super(key: key);
+
+  @override
+  _EventScreenState createState() => _EventScreenState();
+}
+
+class _EventScreenState extends State<EventScreen> {
+  late Future<List<dynamic>> _upcomingEvents;
+  late Future<List<dynamic>> _pastEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    _upcomingEvents = fetchEventData(true);
+    _pastEvents = fetchEventData(false);
+  }
+
+  Future<List<dynamic>> fetchEventData(bool isUpcoming) async {
+    final url = isUpcoming ? 'http://localhost/budy_project/Tester/eventApi.php' : 'http://localhost/budy_project/Tester/eventApi.php';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body)['results'];
+      return data;
+    } else {
+      throw Exception('Failed to load events');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,21 +43,43 @@ class EventScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Events'),
-          bottom: TabBar(
-            tabs: const [
+          bottom: const TabBar(
+            tabs: [
               Tab(text: 'UPCOMING'),
               Tab(text: 'PAST EVENTS'),
             ],
             indicatorColor: Colors.black12,
             indicatorWeight: 4,
             labelColor: Colors.black87,
-            unselectedLabelColor: Colors.grey[400],
+            unselectedLabelColor: Colors.grey,
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            EventList(isUpcoming: true),
-            EventList(isUpcoming: false),
+            FutureBuilder(
+              future: _upcomingEvents,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return EventList(eventData: snapshot.data as List<dynamic>);
+                }
+              },
+            ),
+            FutureBuilder(
+              future: _pastEvents,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return EventList(eventData: snapshot.data as List<dynamic>);
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -34,27 +88,22 @@ class EventScreen extends StatelessWidget {
 }
 
 class EventList extends StatelessWidget {
-  final bool isUpcoming;
+  final List<dynamic> eventData;
 
-  const EventList({super.key, required this.isUpcoming});
+  const EventList({Key? key, required this.eventData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: isUpcoming ? 5 : 3,
+      itemCount: eventData.length,
       itemBuilder: (context, index) {
+        final event = eventData[index];
         return EventCard(
-          eventName: isUpcoming
-              ? 'Upcoming Event ${index + 1}'
-              : 'Past Event ${index + 1}',
-          eventDate: isUpcoming
-              ? DateTime.now().add(Duration(days: index + 1))
-              : DateTime.now().subtract(Duration(days: index + 1)),
-          eventLocation: 'Event Location',
-          eventImagePath:
-              'assets/event_image_path', // Replace with actual image path
-          eventCategory: 'Category',
-          isUpcoming: isUpcoming,
+          eventName: event['event_name'],
+          eventDate: DateTime.parse(event['date_time']),
+          eventLocation: event['location'],
+          eventImagePath: 'assets/images/event_img.png',
+          eventCategory: event['cat_name'],
         );
       },
     );
@@ -67,17 +116,15 @@ class EventCard extends StatelessWidget {
   final String eventLocation;
   final String eventImagePath;
   final String eventCategory;
-  final bool isUpcoming;
 
   const EventCard({
-    super.key,
+    Key? key,
     required this.eventName,
     required this.eventDate,
     required this.eventLocation,
     required this.eventImagePath,
     required this.eventCategory,
-    required this.isUpcoming,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +132,20 @@ class EventCard extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          // Navigate to details page when card is tapped
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventDetailsPage(
+                eventName: eventName,
+                eventDate: eventDate,
+                eventLocation: eventLocation,
+                eventCategory: eventCategory,
+              ),
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -95,7 +155,7 @@ class EventCard extends StatelessWidget {
                 topRight: Radius.circular(8),
               ),
               child: Image.asset(
-                'assets/images/event_img.png', // Replace with actual image path
+                eventImagePath,
                 height: 200,
                 fit: BoxFit.cover,
               ),
@@ -105,47 +165,27 @@ class EventCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'eventName',
-                    style: TextStyle(
+                  Text(
+                    eventName,
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'eventLocation',
-                    style: TextStyle(
+                  Text(
+                    eventLocation,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isUpcoming
-                            ? 'Date: ${DateFormat('dd MMMM yyyy').format(eventDate)}'
-                            : 'Date: ${DateFormat('dd MMMM yyyy').format(eventDate)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Handle details button press
-                        },
-                        child: const Text(
-                          'Details',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Date: ${DateFormat('dd MMMM yyyy').format(eventDate)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -159,8 +199,10 @@ class EventCard extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration                        (
                           color: Colors.blue[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -183,3 +225,4 @@ class EventCard extends StatelessWidget {
     );
   }
 }
+

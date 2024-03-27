@@ -1,6 +1,7 @@
 import 'package:budy/screens/budy_screen.dart';
 import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
+import 'package:budy/screens/map_screen.dart';
 import 'package:budy/screens/profile_screen.dart';
 import 'package:budy/screens/saved_screen.dart';
 import 'package:budy/screens/setting_screen.dart';
@@ -109,8 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(width: 10),
-                const Icon(Icons.location_on, size: 20),
-              ],
+                IconButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MapScreen()));
+                }, 
+                icon:Icon(Icons.location_on, size: 20),),
+            ],
             ),
             Expanded(
               child: Align(
