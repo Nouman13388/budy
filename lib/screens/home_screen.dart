@@ -6,6 +6,7 @@ import 'package:budy/screens/saved_screen.dart';
 import 'package:budy/screens/setting_screen.dart';
 import 'package:budy/screens/signin_screen.dart';
 import 'package:budy/services/location_service.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +36,22 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final locationData = await LocationService.getLocation();
       if (locationData != null) {
-        setState(() {
-          currentLatitude = locationData['latitude'];
-          currentLongitude = locationData['longitude'];
-          currentLocation = 'Lat: $currentLatitude, Lng: $currentLongitude';
-        });
+        final List<Placemark> placemarks = await placemarkFromCoordinates(
+          locationData['latitude']!,
+          locationData['longitude']!,
+        );
+        if (placemarks.isNotEmpty) {
+          final Placemark placemark = placemarks[0];
+          final String locationName = placemark.name ?? 'Unknown Location';
+          final String address = placemark.street ?? '';
+          setState(() {
+            currentLocation = '$locationName, $address';
+          });
+        } else {
+          setState(() {
+            currentLocation = 'Unknown Location';
+          });
+        }
       } else {
         setState(() {
           currentLocation = 'Unknown Location';
@@ -147,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
+              currentAccountPicture: const CircleAvatar(
                 child: Icon(Icons.person),
               ),
               accountName:
@@ -172,11 +184,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.location_searching),
             label: 'Explore',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.event),
             label: 'Event',
           ),
@@ -189,11 +201,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: '',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.save),
             label: 'Saved',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),

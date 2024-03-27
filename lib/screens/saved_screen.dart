@@ -64,7 +64,7 @@ class _SavedScreenState extends State<SavedScreen> {
         title: const Text('Saved Events'),
       ),
       body: savedEvents.isEmpty
-          ? Center(
+          ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -113,7 +113,7 @@ class _SavedScreenState extends State<SavedScreen> {
                     ),
                   ),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () async {
                       await _removeBookmark(
                           eventDetails); // Call _removeBookmark when delete icon is clicked
@@ -127,3 +127,5 @@ class _SavedScreenState extends State<SavedScreen> {
     );
   }
 }
+
+// Event Card
