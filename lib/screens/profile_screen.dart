@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -8,15 +9,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String name = 'John Doe'; // Replace with actual user name
-  String email = 'johndoe@example.com'; // Replace with actual user email
-  List<String> interests = [
-    'Interest 1',
-    'Interest 2',
-    'Interest 3',
-    'Interest 4',
-  ];
-  List<int> selectedInterests = []; // List to store selected interest indexes
+  User? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = FirebaseAuth.instance.currentUser;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +36,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to a new screen for editing profile
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => EditProfileScreen(
-                          currentName: name,
-                          currentEmail: email,
+                          currentName: currentUser?.displayName ?? '',
+                          currentEmail: currentUser?.email ?? '',
                           onSave: (newName, newEmail) {
                             setState(() {
-                              name = newName;
-                              email = newEmail;
+                              currentUser?.updateDisplayName(newName);
+                              currentUser?.updateEmail(newEmail);
                             });
                           },
                         ),
@@ -66,33 +64,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8,
-              runSpacing: 8,
-              children: interests.asMap().entries.map((entry) {
-                final index = entry.key;
-                final interest = entry.value;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (selectedInterests.contains(index)) {
-                        selectedInterests.remove(index);
-                      } else {
-                        selectedInterests.add(index);
-                      }
-                    });
-                  },
-                  child: Chip(
-                    label: Text(interest),
-                    backgroundColor: selectedInterests.contains(index)
-                        ? Colors.blue
-                        : Colors.grey[300],
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 // Navigate to a separate screen for changing interests
@@ -100,10 +71,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChangeInterestsScreen(
-                      currentInterests: interests,
                       onSelectInterests: (selected) {
                         setState(() {
-                          selectedInterests = selected;
+                          // Update selected interests
                         });
                       },
                     ),
@@ -114,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             FutureBuilder<UserData>(
-              future: fetchUserData(), // Function to fetch user data
+              future: fetchUserData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -137,15 +107,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Function to fetch user data from cloud storage or database
   Future<UserData> fetchUserData() async {
-    // Replace this with actual implementation to fetch user data
+    // Fetch user data from Firebase or any other source
     await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
-    return UserData(name: 'John Doe', email: 'johndoe@example.com');
+    return UserData(
+      name: currentUser?.displayName ??
+          FirebaseAuth.instance.currentUser?.displayName ??
+          'John Doe',
+      email: currentUser?.email ?? 'johndoe@example.com',
+    );
   }
 }
 
-// Example data model representing user data
 class UserData {
   final String name;
   final String email;
@@ -153,7 +126,6 @@ class UserData {
   UserData({required this.name, required this.email});
 }
 
-// Screen for editing user profile
 class EditProfileScreen extends StatelessWidget {
   final String currentName;
   final String currentEmail;
@@ -197,7 +169,6 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Save changes and pop the screen
                 onSave(newName, newEmail);
                 Navigator.pop(context);
               },
@@ -210,13 +181,10 @@ class EditProfileScreen extends StatelessWidget {
   }
 }
 
-// Screen for changing interests
 class ChangeInterestsScreen extends StatelessWidget {
-  final List<String> currentInterests;
   final Function(List<int>) onSelectInterests;
 
   const ChangeInterestsScreen({
-    required this.currentInterests,
     required this.onSelectInterests,
   });
 
@@ -233,14 +201,15 @@ class ChangeInterestsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select Interests'),
+            const Text('SelectInterests'),
             const SizedBox(height: 16),
+// Display a list of selectable interests
+// For simplicity, I'll just use hardcoded interests here
             Wrap(
               spacing: 8,
-              children: currentInterests.asMap().entries.map((entry) {
-                final index = entry.key;
-                final interest = entry.value;
-                return GestureDetector(
+              children: List.generate(
+                4,
+                (index) => GestureDetector(
                   onTap: () {
                     if (selectedIndexes.contains(index)) {
                       selectedIndexes.remove(index);
@@ -249,18 +218,18 @@ class ChangeInterestsScreen extends StatelessWidget {
                     }
                   },
                   child: Chip(
-                    label: Text(interest),
+                    label: Text('Interest ${index + 1}'),
                     backgroundColor: selectedIndexes.contains(index)
                         ? Colors.blue
                         : Colors.grey[300],
                   ),
-                );
-              }).toList(),
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Return selected indexes to the previous screen
+// Return selected indexes to the previous screen
                 onSelectInterests(selectedIndexes);
                 Navigator.pop(context);
               },

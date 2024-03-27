@@ -7,10 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  const SignInScreen({Key? key}) : super(key: key);
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -19,9 +20,9 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false; // Track loading state
-  bool _rememberMe = false; // Track remember me checkbox state
-  late SharedPreferences _prefs; // Shared preferences instance
+  bool _isLoading = false;
+  bool _rememberMe = false;
+  late SharedPreferences _prefs;
 
   @override
   void initState() {
@@ -29,10 +30,8 @@ class _SignInScreenState extends State<SignInScreen> {
     _initSharedPreferences();
   }
 
-  // Initialize shared preferences instance
   void _initSharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
-    // Load remember me preference and set email and password if available
     setState(() {
       _rememberMe = _prefs.getBool('rememberMe') ?? false;
       if (_rememberMe) {
@@ -58,11 +57,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Column(
                     children: [
                       Image.asset(
-                        'assets/images/budy_logo.png', // Path to your image asset
-                        width: 150, // Adjust the width as needed
-                        height: 150, // Adjust the height as needed
+                        'assets/images/budy_logo.png',
+                        width: 150,
+                        height: 150,
                       ),
-                      const SizedBox(height: 20), // Add some spacing
+                      const SizedBox(height: 20),
                       TextField(
                         controller: _emailController,
                         decoration: const InputDecoration(
@@ -93,14 +92,14 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                           const Text('Remember Me'),
-                          Expanded(child: Container()), // Spacer
+                          Expanded(child: Container()),
                           TextButton(
                             onPressed: () {
-                              // Navigate to the forgot password screen using named route
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const ForgotScreen()),
+                                  builder: (context) => const ForgotScreen(),
+                                ),
                               );
                             },
                             child: const Text('Forgot Password?'),
@@ -117,24 +116,16 @@ class _SignInScreenState extends State<SignInScreen> {
                             : const Text('Sign In'),
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: _isLoading
                             ? null
                             : () async => await _signInWithGoogle(),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/google.png', // Path to your image asset
-                              width: 24, // Adjust the width as needed
-                              height: 24, // Adjust the height as needed
-                            ),
-                            const SizedBox(
-                                width:
-                                    10), // Add some spacing between icon and text
-                            const Text('Sign In with Google'),
-                          ],
+                        icon: const Image(
+                          image: AssetImage('assets/images/google.png'),
+                          width: 24,
+                          height: 24,
                         ),
+                        label: const Text('Sign In with Google'),
                       ),
                       const SizedBox(height: 10),
                       TextButton(
@@ -160,19 +151,13 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signInWithEmailAndPassword() async {
-    // Set loading state to true
     setState(() {
       _isLoading = true;
     });
 
-    // Sign in with email and password
     try {
-      await Future.delayed(
-          const Duration(seconds: 2)); // Simulate network delay
+      await Future.delayed(const Duration(seconds: 2));
 
-      // Your sign-in logic goes here
-
-      // Save email and password if remember me is checked
       if (_rememberMe) {
         _prefs.setBool('rememberMe', true);
         _prefs.setString('email', _emailController.text.trim());
@@ -183,18 +168,15 @@ class _SignInScreenState extends State<SignInScreen> {
         _prefs.remove('password');
       }
 
-      // Navigate to the home screen after successful sign-in
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } catch (error) {
-      // Handle sign-in errors
       if (kDebugMode) {
         print("Error signing in: $error");
       }
     } finally {
-      // Set loading state to false when sign-in process is complete
       setState(() {
         _isLoading = false;
       });
@@ -203,15 +185,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _signInWithGoogle() async {
     try {
-      // Set loading state to true
       setState(() {
         _isLoading = true;
       });
 
-      // Initialize Google Sign-In
       final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId:
-            '523373871783-mg8bntvgil3vvnl2lvar3re38p7miqkf.apps.googleusercontent.com',
+            '892033678928-v76a4et8ia60sl1dvh141jbe7428rbr0.apps.googleusercontent.com',
       );
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
@@ -224,20 +204,16 @@ class _SignInScreenState extends State<SignInScreen> {
           idToken: googleAuth.idToken,
         );
 
-        // Sign in to Firebase with the Google credential
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-        // Navigate to the home screen after successful sign-in
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       }
     } catch (error) {
-      // Handle Google sign-in errors
       String errorMessage = 'An error occurred. Please try again later.';
 
-      // Show error message to the user using a Snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),
@@ -248,7 +224,6 @@ class _SignInScreenState extends State<SignInScreen> {
         print("Error signing in with Google: $error");
       }
 
-      // Set loading state to false
       setState(() {
         _isLoading = false;
       });

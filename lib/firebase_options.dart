@@ -44,38 +44,42 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCS9vjjDzFM8-iocWUGp0CiWbKoBlddnsg',
-    appId: '1:523373871783:web:ba28e62ad8ae8ced411182',
-    messagingSenderId: '523373871783',
-    projectId: 'budyapp-a1a1f',
-    authDomain: 'budyapp-a1a1f.firebaseapp.com',
-    storageBucket: 'budyapp-a1a1f.appspot.com',
-    measurementId: 'G-872V08JBK7',
+    apiKey: 'AIzaSyDNa10W3VKiCGuzLkT83_Itg3tzDuw7Scw',
+    appId: '1:892033678928:web:3b974dc68ee7fe39009b55',
+    messagingSenderId: '892033678928',
+    projectId: 'natural-client-418503',
+    authDomain: 'natural-client-418503.firebaseapp.com',
+    storageBucket: 'natural-client-418503.appspot.com',
+    measurementId: 'G-CZX59CXS92',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCSpOlnbublbYmHI_SmwL_dIcRZJZE_HqE',
-    appId: '1:523373871783:android:11b2f3f314f34c49411182',
-    messagingSenderId: '523373871783',
-    projectId: 'budyapp-a1a1f',
-    storageBucket: 'budyapp-a1a1f.appspot.com',
+    apiKey: 'AIzaSyB0v6p7f6FeafE4jauFyw9GKsSnq1AW_xk',
+    appId: '1:892033678928:android:2f9b920568060616009b55',
+    messagingSenderId: '892033678928',
+    projectId: 'natural-client-418503',
+    storageBucket: 'natural-client-418503.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAblsoJXXc-lQhkO218KnjvJeeIhmnGCo8',
-    appId: '1:523373871783:ios:3dcdd1223e467af4411182',
-    messagingSenderId: '523373871783',
-    projectId: 'budyapp-a1a1f',
-    storageBucket: 'budyapp-a1a1f.appspot.com',
+    apiKey: 'AIzaSyAXjNilljN7ar21VDv-vd5qLgF8buoE-KY',
+    appId: '1:892033678928:ios:ee7e4d44a6cd0a30009b55',
+    messagingSenderId: '892033678928',
+    projectId: 'natural-client-418503',
+    storageBucket: 'natural-client-418503.appspot.com',
+    iosClientId:
+        '892033678928-ildcapn15fg00cahgtcse3c3lrj72f9b.apps.googleusercontent.com',
     iosBundleId: 'com.example.budy',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAblsoJXXc-lQhkO218KnjvJeeIhmnGCo8',
-    appId: '1:523373871783:ios:38c9705531f919c0411182',
-    messagingSenderId: '523373871783',
-    projectId: 'budyapp-a1a1f',
-    storageBucket: 'budyapp-a1a1f.appspot.com',
+    apiKey: 'AIzaSyAXjNilljN7ar21VDv-vd5qLgF8buoE-KY',
+    appId: '1:892033678928:ios:d163fc706c48fcd0009b55',
+    messagingSenderId: '892033678928',
+    projectId: 'natural-client-418503',
+    storageBucket: 'natural-client-418503.appspot.com',
+    iosClientId:
+        '892033678928-18jp1qj1aekkgl1lqmpet8h00k29gbb9.apps.googleusercontent.com',
     iosBundleId: 'com.example.budy.RunnerTests',
   );
 }
