@@ -1,15 +1,16 @@
 import 'package:budy/screens/budy_screen.dart';
 import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
+import 'package:budy/screens/google_map_screen.dart'; // Import GoogleMapScreen
 import 'package:budy/screens/profile_screen.dart';
 import 'package:budy/screens/saved_screen.dart';
 import 'package:budy/screens/setting_screen.dart';
 import 'package:budy/screens/signin_screen.dart';
 import 'package:budy/services/location_service.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -102,7 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(width: 10),
-                const Icon(Icons.location_on, size: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GoogleMapScreen(),
+                      ),
+                    );
+                  },
+                  child: const Icon(Icons.location_on, size: 20),
+                ),
               ],
             ),
             Expanded(

@@ -1,12 +1,15 @@
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+
 import 'package:budy/utils/route_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+// ignore: constant_identifier_names
 enum ScreenState { Forgot, Congratulation, SetPassword, Verification }
 
 class ForgotScreen extends StatefulWidget {
-  const ForgotScreen({Key? key}) : super(key: key);
+  const ForgotScreen({super.key});
 
   @override
   _ForgotScreenState createState() => _ForgotScreenState();
@@ -15,10 +18,7 @@ class ForgotScreen extends StatefulWidget {
 class _ForgotScreenState extends State<ForgotScreen> {
   ScreenState _currentState = ScreenState.Forgot;
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _newpassController = TextEditingController();
-  final TextEditingController _confirmpassController = TextEditingController();
-  final TextEditingController _pinController = TextEditingController();
-  late String _verificationId;
+  // ignore: unused_field
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +42,6 @@ class _ForgotScreenState extends State<ForgotScreen> {
         return _buildForgotScreen();
       case ScreenState.Congratulation:
         return _buildCongratulationScreen();
-      case ScreenState.SetPassword:
-        return _buildSetPasswordScreen();
-      case ScreenState.Verification:
-        return _buildVerificationScreen();
       default:
         return Container();
     }
@@ -85,15 +81,9 @@ class _ForgotScreenState extends State<ForgotScreen> {
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-          const Text(
-            "Congratulations",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
           const SizedBox(height: 10),
-          const Text("Forgot Password Successfully"),
+          const Text(
+              "An email has been sent to your email address, please check your inbox"),
           const SizedBox(height: 70),
           ElevatedButton(
             onPressed: () {
@@ -103,114 +93,6 @@ class _ForgotScreenState extends State<ForgotScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSetPasswordScreen() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Reset Password",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text("Please Enter New Password"),
-          const SizedBox(height: 30),
-          TextField(
-            controller: _newpassController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              hintText: "New Password",
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: _confirmpassController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              hintText: "Confirm Password",
-            ),
-          ),
-          const SizedBox(height: 50),
-          ElevatedButton(
-            onPressed: () {
-              _resetPassword(_newpassController.text, context);
-            },
-            child: const Text("SUBMIT"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildVerificationScreen() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Verification",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text("We’ve send you the verification code"),
-          const SizedBox(height: 30),
-          _buildOTPTextField(),
-          const SizedBox(height: 50),
-          ElevatedButton(
-            onPressed: _submitOTP,
-            child: const Text("Continue"),
-          ),
-          const SizedBox(height: 50),
-          Center(
-            child: RichText(
-              text: const TextSpan(
-                text: "Re-send code in  ",
-                style: TextStyle(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: "0.20",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOTPTextField() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (int i = 0; i < 4; i++)
-          SizedBox(
-            width: 50,
-            child: TextField(
-              controller: _pinController,
-              maxLength: 1,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                counter: Offstage(),
-              ),
-            ),
-          ),
-      ],
     );
   }
 

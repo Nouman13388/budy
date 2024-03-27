@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 
 import 'package:budy/utils/appconstants.dart';
@@ -15,9 +17,10 @@ class AuthRepo {
 
   //..........................................Updated device android and ios token.............................//
 
+  // ignore: no_leading_underscores_for_local_identifiers
   Future<Http.Response?> updateToken(String _deviceToken) async {
     String id = await getuserid_key();
-    print("userId======$id ,device token==>${_deviceToken}");
+    print("userId======$id ,device token==>$_deviceToken");
     try {
 
       late final response;
@@ -48,9 +51,10 @@ class AuthRepo {
       return response;
     }
     catch (e) {
-      print("Exceptioon update token==>${e}");
+      print("Exceptioon update token==>$e");
       //return null!;
     }
+    return null;
   }
 
 
@@ -59,7 +63,7 @@ class AuthRepo {
 
   Future<Http.Response> chooseCategories(Map<String,String> map) async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.CHOOSECATEGORY),body: map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -71,7 +75,7 @@ class AuthRepo {
 
   Future<Http.Response> fetchCategories() async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.FETCHCATEGORY),)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -80,7 +84,7 @@ class AuthRepo {
   Future<Http.Response> updateProfile(Map<String,String> map) async {
 
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.UPDATEPROFILE), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
 
   }
 
@@ -90,7 +94,7 @@ class AuthRepo {
 
   Future<Http.Response> contactUs(Map<String,String> map) async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.CONTACTUS), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -98,7 +102,7 @@ class AuthRepo {
 
   Future<Http.Response> fetchProfile(Map<String,String> map) async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.FETCHPROFILE), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -108,7 +112,7 @@ class AuthRepo {
 
   Future<Http.Response> setPassword(Map<String,String> map) async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.SETPASS), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -120,7 +124,7 @@ class AuthRepo {
 
   Future<Http.Response> forgotPassword(Map<String,String> map) async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.SENDOTP), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -128,7 +132,7 @@ class AuthRepo {
 
   Future<Http.Response> login(Map<String,String> map) async {
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.LOGIN), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
   }
 
 
@@ -138,7 +142,7 @@ class AuthRepo {
   Future<Http.Response> signup(Map<String,String> map) async {
 
     return await Http.post(Uri.parse(AppConstants.BASE_URL+AppConstants.SIGNUP), body:map)
-        .timeout(Duration(seconds: AppConstants.timeoutInSeconds));
+        .timeout(const Duration(seconds: AppConstants.timeoutInSeconds));
 
   }
 
@@ -163,7 +167,7 @@ class AuthRepo {
     }
     catch(e)
     {
-      throw(e);
+      rethrow;
     }
   }
 
@@ -174,7 +178,7 @@ class AuthRepo {
     }
         catch(e)
     {
-      throw(e);
+      rethrow;
     }
   }
 
@@ -183,7 +187,7 @@ class AuthRepo {
       await sharedPreferences.setBool(AppConstants.onBoarding, onboardingkey);
 
     } catch (e) {
-      throw (e);
+      rethrow;
     }
 
   }

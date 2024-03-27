@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class ApiData {
   Future<Map<String, dynamic>> getData(String url,
-      {String? key, dynamic? param}) async {
+      {String? key, dynamic param}) async {
     try {
       http.Response response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -40,7 +40,9 @@ class ApiData {
       }
     } catch (error) {
       // Handle any errors that occur during the API call
-      print('Error fetching data: $error');
+      if (kDebugMode) {
+        print('Error fetching data: $error');
+      }
       throw Exception('Failed to load data');
     }
   }
@@ -62,7 +64,9 @@ class ApiData {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'OK') {
-          print(data);
+          if (kDebugMode) {
+            print(data);
+          }
           return data; // Return user data directly
         } else {
           throw Exception('Failed to fetch data');
@@ -72,7 +76,9 @@ class ApiData {
       }
     } catch (error) {
       // Handle any errors that occur during the API call
-      print('Error fetching data: $error');
+      if (kDebugMode) {
+        print('Error fetching data: $error');
+      }
       throw Exception('Failed to load data');
     }
   }
@@ -99,7 +105,9 @@ class ApiData {
       }
     } catch (error) {
       // Handle any errors that occur during the API call
-      print('Error editing event data: $error');
+      if (kDebugMode) {
+        print('Error editing event data: $error');
+      }
       throw Exception('Failed to edit event data');
     }
   }
@@ -120,7 +128,9 @@ class ApiData {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 'OK') {
-          print('Item deleted successfully');
+          if (kDebugMode) {
+            print('Item deleted successfully');
+          }
           return data; // Return the response data
         } else {
           throw Exception('Failed to delete item');
