@@ -1,5 +1,9 @@
 //Saved Events Screen
+<<<<<<< HEAD
 import 'package:budy/screens/event_detail_screen.dart';
+=======
+import 'package:budy/screens/event_details_screen.dart';
+>>>>>>> 42632b1ef022970d0683c9d671e68bd17f689ef4
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
@@ -31,10 +35,17 @@ class _SavedScreenState extends State<SavedScreen> {
 
   Future<void> _removeBookmark(String eventName) async {
     setState(() {
+<<<<<<< HEAD
 
       savedEvents.remove(eventName); // Remove event from savedEvents list
     });
     await _prefs.setStringList('savedEvents', savedEvents); // Save updated list to SharedPreferences
+=======
+      savedEvents.remove(eventName); // Remove event from savedEvents list
+    });
+    await _prefs.setStringList(
+        'savedEvents', savedEvents); // Save updated list to SharedPreferences
+>>>>>>> 42632b1ef022970d0683c9d671e68bd17f689ef4
   }
 
   void _navigateToEventDetailsPage(String eventDetails) async {
@@ -64,7 +75,11 @@ class _SavedScreenState extends State<SavedScreen> {
         title: const Text('Saved Events'),
       ),
       body: savedEvents.isEmpty
+<<<<<<< HEAD
           ? const Center(
+=======
+          ? Center(
+>>>>>>> 42632b1ef022970d0683c9d671e68bd17f689ef4
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -96,11 +111,21 @@ class _SavedScreenState extends State<SavedScreen> {
 
                 return ListTile(
                   title: GestureDetector(
+<<<<<<< HEAD
                     onTap: () => _navigateToEventDetailsPage(eventDetails), // Navigate to event details page on tap
                     child: Text(eventName),
                   ),
                   subtitle: GestureDetector(
                     onTap: () => _navigateToEventDetailsPage(eventDetails), // Navigate to event details page on tap
+=======
+                    onTap: () => _navigateToEventDetailsPage(
+                        eventDetails), // Navigate to event details page on tap
+                    child: Text(eventName),
+                  ),
+                  subtitle: GestureDetector(
+                    onTap: () => _navigateToEventDetailsPage(
+                        eventDetails), // Navigate to event details page on tap
+>>>>>>> 42632b1ef022970d0683c9d671e68bd17f689ef4
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -111,10 +136,19 @@ class _SavedScreenState extends State<SavedScreen> {
                     ),
                   ),
                   trailing: IconButton(
+<<<<<<< HEAD
                     icon: const Icon(Icons.delete),
                     onPressed: () async {
                       await _removeBookmark(eventDetails); // Call _removeBookmark when delete icon is clicked
                       setState(() {}); // Trigger rebuild to update the list view
+=======
+                    icon: Icon(Icons.delete),
+                    onPressed: () async {
+                      await _removeBookmark(
+                          eventDetails); // Call _removeBookmark when delete icon is clicked
+                      setState(
+                          () {}); // Trigger rebuild to update the list view
+>>>>>>> 42632b1ef022970d0683c9d671e68bd17f689ef4
                     },
                   ),
                 );

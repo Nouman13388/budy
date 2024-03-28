@@ -54,10 +54,13 @@ dependencies:
   shimmer: ^3.0.0
   firebase_messaging: ^14.7.20
   permission_handler: ^11.3.0
+<<<<<<< HEAD
   google_sign_in_web: ^0.12.4
   google_maps_flutter: ^2.6.0
   google_maps_flutter_web: ^0.5.6+2
   json_serializable: ^6.7.1
+=======
+>>>>>>> 42632b1ef022970d0683c9d671e68bd17f689ef4
 
 dev_dependencies:
   flutter_test:

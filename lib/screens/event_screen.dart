@@ -1,40 +1,10 @@
-//Event Screen
-import 'package:budy/screens/event_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http; // Import HTTP package
 import 'dart:convert'; // Import convert for JSON decoding
 
-class EventScreen extends StatefulWidget {
-  const EventScreen({Key? key}) : super(key: key);
-
-  @override
-  _EventScreenState createState() => _EventScreenState();
-}
-
-class _EventScreenState extends State<EventScreen> {
-  late Future<List<dynamic>> _upcomingEvents;
-  late Future<List<dynamic>> _pastEvents;
-
-  @override
-  void initState() {
-    super.initState();
-    _upcomingEvents = fetchEventData(true);
-    _pastEvents = fetchEventData(false);
-  }
-
-  Future<List<dynamic>> fetchEventData(bool isUpcoming) async {
-    final url = isUpcoming ? 'http://localhost/budy_project/Tester/eventApi.php' : 'http://localhost/budy_project/Tester/eventApi.php';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body)['results'];
-      return data;
-    } else {
-      throw Exception('Failed to load events');
-    }
-  }
+class EventScreen extends StatelessWidget {
+  const EventScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,30 +26,8 @@ class _EventScreenState extends State<EventScreen> {
         ),
         body: TabBarView(
           children: [
-            FutureBuilder(
-              future: _upcomingEvents,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return EventList(eventData: snapshot.data as List<dynamic>);
-                }
-              },
-            ),
-            FutureBuilder(
-              future: _pastEvents,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return EventList(eventData: snapshot.data as List<dynamic>);
-                }
-              },
-            ),
+            EventList(isUpcoming: true),
+            EventList(isUpcoming: false),
           ],
         ),
       ),
@@ -90,7 +38,7 @@ class _EventScreenState extends State<EventScreen> {
 class EventList extends StatelessWidget {
   final List<dynamic> eventData;
 
-  const EventList({Key? key, required this.eventData}) : super(key: key);
+  const EventList({super.key, required this.isUpcoming});
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +72,8 @@ class EventCard extends StatelessWidget {
     required this.eventLocation,
     required this.eventImagePath,
     required this.eventCategory,
-  }) : super(key: key);
+    required this.isUpcoming,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -199,10 +148,8 @@ class EventCard extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration                        (
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
                           color: Colors.blue[200],
                           borderRadius: BorderRadius.circular(8),
                         ),

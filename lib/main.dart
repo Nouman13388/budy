@@ -1,16 +1,14 @@
 import 'package:budy/firebase_options.dart';
-import 'package:budy/screens/splash_screen.dart';
 import 'package:budy/utils/route_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.web,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Run the app with a splash screen delay

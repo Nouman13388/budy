@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,11 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
   double? currentLatitude;
   double? currentLongitude;
   bool _showSearchBar = false;
+  User? _user;
 
   @override
   void initState() {
     super.initState();
     _getLocation();
+    _getUser();
   }
 
   Future<void> _getLocation() async {
@@ -54,6 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _getUser() async {
+    _user = FirebaseAuth.instance.currentUser;
+  }
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -76,31 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Expanded(
-              flex: 0,
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: PopupMenuButton(
-                  icon: const Icon(Icons.menu),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: ListTile(
-                        leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
-                        onTap: _openSettings,
-                      ),
-                    ),
-                    PopupMenuItem(
-                      child: ListTile(
-                        leading: const Icon(Icons.logout),
-                        title: const Text('Logout'),
-                        onTap: _logout,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -165,16 +146,41 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : null,
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                child: Icon(Icons.person),
+              ),
+              accountName:
+                  _user != null ? Text(_user!.displayName ?? '') : null,
+              accountEmail: _user != null ? Text(_user!.email ?? '') : null,
+            ),
+            ListTile(
+              title: const Text('Settings'),
+              leading: const Icon(Icons.settings),
+              onTap: _openSettings,
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              leading: const Icon(Icons.logout),
+              onTap: _logout,
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.location_searching),
             label: 'Explore',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.event),
             label: 'Event',
           ),
@@ -187,17 +193,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: '',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.save),
             label: 'Saved',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.blue, // Set the selected item color to blue
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
