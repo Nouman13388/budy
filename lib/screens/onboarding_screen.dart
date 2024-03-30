@@ -33,139 +33,131 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            if (currentIndex == items.length - 1) {
-              // If it's the last page, navigate to the SignInScreen
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => SignInScreen()),
-              );
-            }
-          },
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Expanded(
+              Container(
+                height: MediaQuery.of(context).size.height * 0.8,
                 child: PageView.builder(
                   controller: controller,
                   itemCount: items.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/onboard1.png', // Use your image asset
-                          height: 300,
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height / 15),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                              color: Colors.blue, // Customize background color
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(50),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  items[index].title,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white, // Customize text color
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24, // Customize font size
-                                  ),
-                                ),
-                                SizedBox(height: 30),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 38.0),
-                                  child: Text(
-                                    items[index].subtitle,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color:
-                                          Colors.white, // Customize text color
-                                      fontSize: 16, // Customize font size
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
+                    return buildPageViewItem(items[index]);
                   },
                 ),
               ),
-              Container(
-                color: Colors.blue, // Customize container color
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 35,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle SKIP button press
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignInScreen()),
-                          );
-                        },
-                        child: Text(
-                          "SKIP",
-                          style: TextStyle(fontSize: 16), // Customize font size
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: List.generate(
-                        items.length,
-                        (index) => buildDotContainer(index),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 35,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (currentIndex == items.length - 1) {
-                            // Handle GET STARTED button press
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignInScreen()),
-                            );
-                          } else {
-                            controller.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease,
-                            );
-                          }
-                        },
-                        child: Text(
-                          currentIndex == items.length - 1
-                              ? "GET STARTED"
-                              : "NEXT",
-                          style: TextStyle(fontSize: 16), // Customize font size
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              buildBottomContainer(context),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildPageViewItem(OnboardingItem item) {
+    return Column(
+      children: [
+        Image.asset(
+          item.upperImage,
+          height: MediaQuery.of(context).size.height * 0.5,
+        ),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: Colors.blue, // Customize background color
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  item.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white, // Customize text color
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24, // Customize font size
+                  ),
+                ),
+                SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 38.0),
+                  child: Text(
+                    item.subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white, // Customize text color
+                      fontSize: 16, // Customize font size
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildBottomContainer(BuildContext context) {
+    return Container(
+      color: Colors.blue, // Customize container color
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            height: 35,
+            child: ElevatedButton(
+              onPressed: () {
+                // Handle SKIP button press
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignInScreen()),
+                );
+              },
+              child: Text(
+                "SKIP",
+                style: TextStyle(fontSize: 16), // Customize font size
+              ),
+            ),
+          ),
+          Row(
+            children: List.generate(
+              items.length,
+              (index) => buildDotContainer(index),
+            ),
+          ),
+          SizedBox(
+            height: 35,
+            child: ElevatedButton(
+              onPressed: () {
+                if (currentIndex == items.length - 1) {
+                  // Handle GET STARTED button press
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignInScreen()),
+                  );
+                } else {
+                  controller.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                  );
+                }
+              },
+              child: Text(
+                currentIndex == items.length - 1 ? "GET STARTED" : "NEXT",
+                style: TextStyle(fontSize: 16), // Customize font size
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -197,17 +189,17 @@ class OnboardingItem {
 
 final List<OnboardingItem> items = [
   OnboardingItem(
-    upperImage: 'assets/images/image1.png',
+    upperImage: 'assets/images/onboard1.png',
     title: 'Title 1',
     subtitle: 'Subtitle 1',
   ),
   OnboardingItem(
-    upperImage: 'assets/images/image2.png',
+    upperImage: 'assets/images/onboard2.png',
     title: 'Title 2',
     subtitle: 'Subtitle 2',
   ),
   OnboardingItem(
-    upperImage: 'assets/images/image3.png',
+    upperImage: 'assets/images/onboard3.png',
     title: 'Title 3',
     subtitle: 'Subtitle 3',
   ),

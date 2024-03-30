@@ -1,7 +1,8 @@
-import 'package:budy/screens/budy_screen.dart';
+import 'package:budy/screens/qr_screen.dart';
 import 'package:budy/screens/event_screen.dart';
 import 'package:budy/screens/explore_screen.dart';
 import 'package:budy/screens/forgot_screen.dart';
+import 'package:budy/screens/google_map_screen.dart';
 import 'package:budy/screens/home_screen.dart';
 import 'package:budy/screens/onboarding_screen.dart';
 import 'package:budy/screens/profile_screen.dart';
@@ -29,6 +30,7 @@ class RouteHelper {
   static const String saved = "/saved";
   static const String setting = "/setting";
   static const String buddy = "/buddy";
+  static const String googleMap = "/googlemap";
 
   static String getInitialRoute() => initial;
   static String getSplashRoute() => splash;
@@ -46,6 +48,7 @@ class RouteHelper {
   static String getSavedRoute() => saved;
   static String getSettingRoute() => setting;
   static String getBuddyRoute() => buddy;
+  static String getGoogleMapRoute() => googleMap;
 
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => const SplashScreen()),
@@ -59,6 +62,7 @@ class RouteHelper {
     GetPage(name: profile, page: () => const ProfileScreen()),
     GetPage(name: saved, page: () => const SavedScreen()),
     GetPage(name: setting, page: () => const SettingsScreen()),
-    GetPage(name: buddy, page: () => const BudyScreen()),
+    GetPage(name: buddy, page: () => const MobileScannerScreen()),
+    GetPage(name: googleMap, page: () => const GoogleMapScreen()),
   ];
 }

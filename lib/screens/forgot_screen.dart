@@ -109,7 +109,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
       // Display error message using a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error sending password reset email: $e'),
+          content: Text('Invalid Email Address. Please try again.'),
           duration: const Duration(seconds: 3),
         ),
       );
@@ -143,24 +143,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
       // Display error message using a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error resetting password: $e'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-
-  void _submitOTP() async {
-    try {
-      // Implement your OTP submission logic here
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error submitting OTP: $e');
-      }
-      // Display error message using a SnackBar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error submitting OTP: $e'),
+          content: Text('Error resetting password [invalid email]'),
           duration: const Duration(seconds: 3),
         ),
       );

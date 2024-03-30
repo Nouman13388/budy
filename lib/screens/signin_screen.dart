@@ -114,23 +114,23 @@ class _SignInScreenState extends State<SignInScreen> {
                             : const Text('Sign In'),
                       ),
                       const SizedBox(height: 20),
-                      // ElevatedButton(
-                      //   onPressed: _isLoading
-                      //       ? null
-                      //       : () async => await _signInWithGoogle(),
-                      //   child: const Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Image(
-                      //         image: AssetImage('assets/images/google.png'),
-                      //         width: 24,
-                      //         height: 24,
-                      //       ),
-                      //       SizedBox(width: 10),
-                      //       const Text('Sign In with Google'),
-                      //     ],
-                      //   ),
-                      // ),
+                      ElevatedButton(
+                        onPressed: _isLoading
+                            ? null
+                            : () async => await _signInWithGoogle(),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image(
+                              image: AssetImage('assets/images/google.png'),
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(width: 10),
+                            const Text('Sign In with Google'),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {

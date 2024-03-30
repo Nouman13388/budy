@@ -1,16 +1,15 @@
-import 'package:budy/screens/budy_screen.dart';
-import 'package:budy/screens/event_screen.dart';
-import 'package:budy/screens/explore_screen.dart';
-import 'package:budy/screens/google_map_screen.dart'; // Import GoogleMapScreen
-import 'package:budy/screens/profile_screen.dart';
-import 'package:budy/screens/saved_screen.dart';
-import 'package:budy/screens/setting_screen.dart';
-import 'package:budy/screens/signin_screen.dart';
-import 'package:budy/services/location_service.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'qr_screen.dart';
+import 'event_screen.dart';
+import 'explore_screen.dart';
+import 'profile_screen.dart';
+import 'saved_screen.dart';
+import 'setting_screen.dart';
+import 'signin_screen.dart';
+import '../services/location_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,8 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String currentLocation = 'Loading...';
-  double? currentLatitude;
-  double? currentLongitude;
   bool _showSearchBar = false;
   User? _user;
 
@@ -83,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     const ExploreScreen(),
     const EventScreen(),
-    const BudyScreen(),
+    const MobileScannerScreen(),
     const SavedScreen(),
     const ProfileScreen(),
   ];
@@ -94,40 +91,26 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  currentLocation,
-                  style: const TextStyle(fontSize: 11),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GoogleMapScreen(),
-                      ),
-                    );
-                  },
-                  child: const Icon(Icons.location_on, size: 20),
-                ),
-              ],
-            ),
             Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: Icon(_showSearchBar ? Icons.close : Icons.search),
-                  onPressed: () {
-                    setState(() {
-                      _showSearchBar = !_showSearchBar;
-                    });
-                  },
-                ),
+              child: Text(
+                currentLocation,
+                style: const TextStyle(fontSize: 11),
+                overflow: TextOverflow.ellipsis,
               ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.location_on),
+              onPressed: () {
+                Navigator.pushNamed(context, '/googlemap');
+              },
+            ),
+            IconButton(
+              icon: Icon(_showSearchBar ? Icons.close : Icons.search),
+              onPressed: () {
+                setState(() {
+                  _showSearchBar = !_showSearchBar;
+                });
+              },
             ),
           ],
         ),

@@ -1,241 +1,10 @@
-// //Event Screen
-// import 'package:budy/screens/event_details_screen.dart';
-// import 'package:flutter/material.dart';
-// import 'package:intl/intl.dart';
-// import 'package:http/http.dart' as http; // Import HTTP package
-// import 'dart:convert'; // Import convert for JSON decoding
-
-// class EventScreen extends StatefulWidget {
-//   const EventScreen({super.key});
-
-//   @override
-//   _EventScreenState createState() => _EventScreenState();
-// }
-
-// class _EventScreenState extends State<EventScreen> {
-//   late Future<List<dynamic>> _upcomingEvents;
-//   late Future<List<dynamic>> _pastEvents;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _upcomingEvents = fetchEventData(true);
-//     _pastEvents = fetchEventData(false);
-//   }
-
-//   Future<List<dynamic>> fetchEventData(bool isUpcoming) async {
-//     final url = isUpcoming
-//         ? 'http://localhost/budy_project/Tester/eventApi.php'
-//         : 'http://localhost/budy_project/Tester/eventApi.php';
-
-//     final response = await http.get(Uri.parse(url));
-
-//     if (response.statusCode == 200) {
-//       final List<dynamic> data = json.decode(response.body)['results'];
-//       return data;
-//     } else {
-//       throw Exception('Failed to load events');
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 2,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Events'),
-//           bottom: const TabBar(
-//             tabs: [
-//               Tab(text: 'UPCOMING'),
-//               Tab(text: 'PAST EVENTS'),
-//             ],
-//             indicatorColor: Colors.black12,
-//             indicatorWeight: 4,
-//             labelColor: Colors.black87,
-//             unselectedLabelColor: Colors.grey,
-//           ),
-//         ),
-//         body: TabBarView(
-//           children: [
-//             FutureBuilder(
-//               future: _upcomingEvents,
-//               builder: (context, snapshot) {
-//                 if (snapshot.connectionState == ConnectionState.waiting) {
-//                   return const Center(child: CircularProgressIndicator());
-//                 } else if (snapshot.hasError) {
-//                   return Center(child: Text('Error: ${snapshot.error}'));
-//                 } else {
-//                   return EventList(eventData: snapshot.data as List<dynamic>);
-//                 }
-//               },
-//             ),
-//             FutureBuilder(
-//               future: _pastEvents,
-//               builder: (context, snapshot) {
-//                 if (snapshot.connectionState == ConnectionState.waiting) {
-//                   return const Center(child: CircularProgressIndicator());
-//                 } else if (snapshot.hasError) {
-//                   return Center(child: Text('Error: ${snapshot.error}'));
-//                 } else {
-//                   return EventList(eventData: snapshot.data as List<dynamic>);
-//                 }
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class EventList extends StatelessWidget {
-//   final List<dynamic> eventData;
-
-//   const EventList({super.key, required this.eventData});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListView.builder(
-//       itemCount: eventData.length,
-//       itemBuilder: (context, index) {
-//         final event = eventData[index];
-//         return EventCard(
-//           eventName: event['event_name'],
-//           eventDate: DateTime.parse(event['date_time']),
-//           eventLocation: event['location'],
-//           eventImagePath: 'assets/images/event_img.png',
-//           eventCategory: event['cat_name'],
-//         );
-//       },
-//     );
-//   }
-// }
-
-// class EventCard extends StatelessWidget {
-//   final String eventName;
-//   final DateTime eventDate;
-//   final String eventLocation;
-//   final String eventImagePath;
-//   final String eventCategory;
-
-//   const EventCard({
-//     super.key,
-//     required this.eventName,
-//     required this.eventDate,
-//     required this.eventLocation,
-//     required this.eventImagePath,
-//     required this.eventCategory,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       elevation: 4,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-//       child: InkWell(
-//         onTap: () {
-//           // Navigate to details page when card is tapped
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//               builder: (context) => EventDetailsPage(
-//                 eventName: eventName,
-//                 eventDate: eventDate,
-//                 eventLocation: eventLocation,
-//                 eventCategory: eventCategory,
-//               ),
-//             ),
-//           );
-//         },
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: [
-//             ClipRRect(
-//               borderRadius: const BorderRadius.only(
-//                 topLeft: Radius.circular(8),
-//                 topRight: Radius.circular(8),
-//               ),
-//               child: Image.asset(
-//                 eventImagePath,
-//                 height: 200,
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.all(16),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     eventName,
-//                     style: const TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 4),
-//                   Text(
-//                     eventLocation,
-//                     style: const TextStyle(
-//                       fontSize: 16,
-//                       color: Colors.grey,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 8),
-//                   Text(
-//                     'Date: ${DateFormat('dd MMMM yyyy').format(eventDate)}',
-//                     style: const TextStyle(
-//                       fontSize: 16,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 8),
-//                   Row(
-//                     children: [
-//                       const Text(
-//                         'Category: ',
-//                         style: TextStyle(
-//                           fontSize: 16,
-//                           fontWeight: FontWeight.w500,
-//                         ),
-//                       ),
-//                       Container(
-//                         padding: const EdgeInsets.symmetric(
-//                           horizontal: 6,
-//                           vertical: 2,
-//                         ),
-//                         decoration: BoxDecoration(
-//                           color: Colors.blue[200],
-//                           borderRadius: BorderRadius.circular(8),
-//                         ),
-//                         child: Text(
-//                           eventCategory,
-//                           style: const TextStyle(
-//                             fontSize: 14,
-//                             color: Colors.blue,
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-import 'package:budy/screens/saved_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EventScreen extends StatelessWidget {
-  const EventScreen({super.key});
+  const EventScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +12,18 @@ class EventScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Events'),
+          title: Row(
+            children: [
+              const Text('Events'),
+              IconButton(
+                onPressed: () {
+                  // Display form to add details
+                  _showAddEventForm(context);
+                },
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
           bottom: const TabBar(
             tabs: [
               Tab(text: 'UPCOMING'),
@@ -264,12 +44,108 @@ class EventScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _showAddEventForm(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Event'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Event Name'),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Event Date'),
+                ),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(labelText: 'Event Location'),
+                ),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(labelText: 'Event Category'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Save event details
+                _saveEventDetails(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _saveEventDetails(BuildContext context) async {
+    // Assuming you have variables for event details like eventName, eventDate, eventLocation, etc.
+    String eventName = "Event Name";
+    DateTime eventDate = DateTime.now();
+    String eventLocation = "Event Location";
+
+    try {
+      // Get instance of SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      // Serialize event details into a string
+      String eventDetails =
+          '$eventName;$eventDate;$eventLocation'; // You can add more details here
+
+      // Get the existing saved event details or create an empty list
+      List<String> savedEvents = prefs.getStringList('savedEvents') ?? [];
+
+      // Add the new event details to the list
+      savedEvents.add(eventDetails);
+
+      // Save the updated list back to SharedPreferences
+      await prefs.setStringList('savedEvents', savedEvents);
+
+      // Display a confirmation dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Save Event Details'),
+            content: Text('Event details saved successfully.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context)
+                      .pop(); // Navigate back to the previous screen
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      print('Error saving event details: $error');
+      // Handle error if necessary
+    }
+  }
 }
 
 class EventList extends StatelessWidget {
   final bool isUpcoming;
 
-  const EventList({super.key, required this.isUpcoming});
+  const EventList({Key? key, required this.isUpcoming}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -303,17 +179,18 @@ class EventCard extends StatelessWidget {
   final bool isUpcoming;
 
   const EventCard({
-    super.key,
+    Key? key,
     required this.eventName,
     required this.eventDate,
     required this.eventLocation,
     required this.eventImagePath,
     required this.eventCategory,
     required this.isUpcoming,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isBookmarked = false; // Change this to the actual bookmark status
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -385,11 +262,27 @@ class EventCard extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.bookmark),
+                        icon: Icon(
+                          Icons.bookmark,
+                          color: isBookmarked ? Colors.blue : Colors.grey,
+                        ),
                         onPressed: () {
-                          // Handle save button press
-                          _saveEvent(context,
-                              '$eventName;${DateFormat('dd MMMM yyyy').format(eventDate)};$eventLocation;$eventCategory');
+                          // Check if the event is already bookmarked
+                          if (isBookmarked) {
+                            // Event is already bookmarked, show a message or perform another action
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Event is already bookmarked!'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          } else {
+                            // Event is not bookmarked, save it and update the bookmark icon
+                            _saveEvent(context,
+                                '$eventName;${DateFormat('dd MMMM yyyy').format(eventDate)};$eventLocation;$eventCategory');
+                            // Update the bookmark status to true
+                            isBookmarked = true;
+                          }
                         },
                       ),
                     ],
@@ -436,11 +329,5 @@ class EventCard extends StatelessWidget {
         prefs.getStringList('savedEvents') ?? <String>[];
     savedEvents.add(eventDetails);
     await prefs.setStringList('savedEvents', savedEvents);
-
-    // Navigate to the SavedScreen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SavedScreen()),
-    );
   }
 }

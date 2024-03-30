@@ -117,8 +117,7 @@ class _SavedScreenState extends State<SavedScreen> {
                     onPressed: () async {
                       await _removeBookmark(
                           eventDetails); // Call _removeBookmark when delete icon is clicked
-                      setState(
-                          () {}); // Trigger rebuild to update the list view
+                      _loadPreferences(); // Update savedEvents list after deletion
                     },
                   ),
                 );
@@ -127,5 +126,3 @@ class _SavedScreenState extends State<SavedScreen> {
     );
   }
 }
-
-// Event Card
