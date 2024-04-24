@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "892033678928",
+    "project_id": "natural-client-418503",
+    "storage_bucket": "natural-client-418503.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892033678928:android:2f9b920568060616009b55",
+        "android_client_info": {
+          "package_name": "com.example.budy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892033678928-v76a4et8ia60sl1dvh141jbe7428rbr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0v6p7f6FeafE4jauFyw9GKsSnq1AW_xk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892033678928-20ugqh4uq02h6quo09fm50cp0l4ukvka.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "892033678928-18jp1qj1aekkgl1lqmpet8h00k29gbb9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.budy.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
